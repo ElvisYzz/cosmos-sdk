@@ -328,6 +328,13 @@ func (rs *rootMultiStore) loadCommitStoreFromParams(key sdk.StoreKey, id CommitI
 		return
 	case sdk.StoreTypeDB:
 		panic("dbm.DB is not a CommitStore")
+	case sdk.StoreTypeImmutable:
+		_, ok := key.(*sdk.ImmutableStoreKey)
+		if !ok {
+			err = fmt.Errorf("invalid StoreKey for StoreTypeImmutable: %s", key.String())
+		}
+		store = NewImmutableStore()
+		return
 	case sdk.StoreTypeTransient:
 		_, ok := key.(*sdk.TransientStoreKey)
 		if !ok {

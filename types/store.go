@@ -252,6 +252,7 @@ const (
 	StoreTypeDB
 	StoreTypeIAVL
 	StoreTypeTransient
+	StoreTypeImmutable
 )
 
 //----------------------------------------
@@ -341,6 +342,34 @@ func (key *TransientStoreKey) String() string {
 
 // Implements KVStoreGetter
 func (key *TransientStoreKey) KVStore(ctx Context) KVStore {
+	return ctx.KVStore(key)
+}
+
+// ImmutableStoreKey is used for indexing immutable stores in a MultiStore
+type ImmutableStoreKey struct {
+	name string
+}
+
+// Constructs new ImmutableStorEKey
+// Must return a pointer according to the ocap principle
+func NewImmutableStoreKey(name string) *ImmutableStoreKey {
+	return &ImmutableStoreKey{
+		name: name,
+	}
+}
+
+// Implements StoreKey
+func (key *ImmutableStoreKey) Name() string {
+	return key.name
+}
+
+// Implements StoreKey
+func (key *ImmutableStoreKey) String() string {
+	return fmt.Sprintf("ImmutableStoreKey{%p, %s}", key, key.name)
+}
+
+// Implements KVStoreGetter
+func (key *ImmutableStoreKey) KVStore(ctx Context) KVStore {
 	return ctx.KVStore(key)
 }
 
