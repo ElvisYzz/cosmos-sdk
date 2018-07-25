@@ -191,6 +191,7 @@ func (app *BaseApp) initFromStore(mainKey sdk.StoreKey) error {
 		return errors.New("baseapp expects MultiStore with 'main' KVStore")
 	}
 
+	app.setCheckState(abci.Header{})
 	return nil
 }
 
@@ -253,7 +254,6 @@ func (app *BaseApp) SetOption(req abci.RequestSetOption) (res abci.ResponseSetOp
 func (app *BaseApp) InitChain(req abci.RequestInitChain) (res abci.ResponseInitChain) {
 	// Initialize the deliver state and check state with ChainID and run initChain
 	app.setDeliverState(abci.Header{ChainID: req.ChainId})
-	app.setCheckState(abci.Header{ChainID: req.ChainId})
 
 	if app.initChainer == nil {
 		return
